@@ -38,6 +38,9 @@ def create_app(config_class=Config):
 
     from routes.reports import bp as reports_bp
     app.register_blueprint(reports_bp, url_prefix='/reports')
+    
+    from routes.transfers import bp as transfers_bp
+    app.register_blueprint(transfers_bp, url_prefix='/transfers')
 
     @app.route('/')
     def index():

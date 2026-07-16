@@ -63,3 +63,12 @@ class Setting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     opening_cash = db.Column(db.Float, default=0.0)
     opening_online = db.Column(db.Float, default=0.0)
+
+class Transfer(db.Model):
+    __tablename__ = 'transfers'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+    transfer_type = db.Column(db.String(50), nullable=False) # Cash to Online, Online to Cash
+    amount = db.Column(db.Float, nullable=False)
+    remarks = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

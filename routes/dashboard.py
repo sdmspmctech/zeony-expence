@@ -18,8 +18,13 @@ def index():
     total_expense_cash = db.session.query(func.sum(Expense.amount)).filter_by(payment_mode='Cash').scalar() or 0.0
     total_expense_online = db.session.query(func.sum(Expense.amount)).filter_by(payment_mode='Online').scalar() or 0.0
     
-    cash_available = opening_cash + total_revenue_cash - total_expense_cash
-    online_balance = opening_online + total_revenue_online - total_expense_online
+    # Calculate Transfers
+    from models import Transfer
+    total_cash_to_online = db.session.query(func.sum(Transfer.amount)).filter_by(transfer_type='Cash to Online').scalar() or 0.0
+    total_online_to_cash = db.session.query(func.sum(Transfer.amount)).filter_by(transfer_type='Online to Cash').scalar() or 0.0
+    
+    cash_available = opening_cash + total_revenue_cash - total_expense_cash - total_cash_to_online + total_online_to_cash
+    online_balance = opening_online + total_revenue_online - total_expense_online + total_cash_to_online - total_online_to_cash
     
     total_revenue = total_revenue_cash + total_revenue_online
     total_expenses = total_expense_cash + total_expense_online
