@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-8 pb-10">
+    <!-- Top Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 p-6 flex items-center justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">Total Revenue</p>
+                <h3 class="text-3xl font-extrabold text-slate-800">₹{{ "{:,.2f}".format(total_revenue) }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                <i class="fas fa-arrow-down text-white text-2xl"></i>
+            </div>
+        </div>
+        
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 p-6 flex items-center justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">Total Expenses</p>
+                <h3 class="text-3xl font-extrabold text-slate-800">₹{{ "{:,.2f}".format(total_expenses) }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center shadow-lg shadow-rose-500/30 group-hover:scale-110 transition-transform">
+                <i class="fas fa-arrow-up text-white text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 p-6 flex items-center justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">Cash Available</p>
+                <h3 class="text-3xl font-extrabold text-slate-800">₹{{ "{:,.2f}".format(cash_available) }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+                <i class="fas fa-wallet text-white text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 p-6 flex items-center justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 mb-1 uppercase tracking-wider">Online Balance</p>
+                <h3 class="text-3xl font-extrabold text-slate-800">₹{{ "{:,.2f}".format(online_balance) }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                <i class="fas fa-university text-white text-2xl"></i>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Big Totals -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 rounded-3xl shadow-2xl shadow-indigo-500/20 p-8 text-white col-span-1 lg:col-span-2 flex items-center justify-between relative overflow-hidden group">
+            <div class="absolute -right-10 -top-10 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-opacity"></div>
+            <div class="relative z-10">
+                <p class="text-indigo-100 font-semibold uppercase tracking-widest mb-3 opacity-90">Total Company Balance</p>
+                <h2 class="text-5xl font-black tracking-tight drop-shadow-sm">₹{{ "{:,.2f}".format(total_company_balance) }}</h2>
+            </div>
+            <div class="hidden sm:block relative z-10">
+                <div class="w-24 h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
+                    <i class="fas fa-chart-line text-5xl text-white drop-shadow-md"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white/80 backdrop-blur-md rounded-3xl shadow-sm border border-slate-100 p-8 flex flex-col justify-center space-y-6">
+            <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl">
+                <div class="flex items-center text-slate-600">
+                    <i class="fas fa-users w-8 text-indigo-500 text-xl"></i>
+                    <span class="font-semibold text-lg">Total Clients</span>
+                </div>
+                <span class="text-3xl font-black text-slate-800">{{ total_clients }}</span>
+            </div>
+            <div class="flex justify-between items-center bg-slate-50 p-4 rounded-xl">
+                <div class="flex items-center text-slate-600">
+                    <i class="fas fa-project-diagram w-8 text-purple-500 text-xl"></i>
+                    <span class="font-semibold text-lg">Total Projects</span>
+                </div>
+                <span class="text-3xl font-black text-slate-800">{{ total_projects }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Area -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                <i class="fas fa-chart-bar text-indigo-500 mr-2"></i> Income vs Expense
+            </h3>
+            <div class="relative h-72 w-full">
+                <canvas id="incomeExpenseChart"></canvas>
+            </div>
+        </div>
+        <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                <i class="fas fa-chart-pie text-purple-500 mr-2"></i> Cash vs Online Balance
+            </h3>
+            <div class="relative h-72 w-full">
+                <canvas id="balanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Create gradients for charts
+    const ctx1 = document.getElementById('incomeExpenseChart').getContext('2d');
+    const incomeGradient = ctx1.createLinearGradient(0, 0, 0, 400);
+    incomeGradient.addColorStop(0, 'rgba(16, 185, 129, 0.9)'); // Emerald
+    incomeGradient.addColorStop(1, 'rgba(16, 185, 129, 0.2)');
+
+    const expenseGradient = ctx1.createLinearGradient(0, 0, 0, 400);
+    expenseGradient.addColorStop(0, 'rgba(244, 63, 94, 0.9)'); // Rose
+    expenseGradient.addColorStop(1, 'rgba(244, 63, 94, 0.2)');
+
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Cash', 'Online'],
+            datasets: [
+                {
+                    label: 'Revenue',
+                    data: {{ income_data | tojson }},
+                    backgroundColor: incomeGradient,
+                    borderRadius: 8,
+                    borderWidth: 0,
+                    barPercentage: 0.6
+                },
+                {
+                    label: 'Expenses',
+                    data: {{ expense_data | tojson }},
+                    backgroundColor: expenseGradient,
+                    borderRadius: 8,
+                    borderWidth: 0,
+                    barPercentage: 0.6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { font: { family: 'Inter', weight: '600' }, usePointStyle: true } }
+            },
+            scales: {
+                y: { 
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+                    ticks: { font: { family: 'Inter' } }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: { font: { family: 'Inter', weight: '600' } }
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('balanceChart').getContext('2d');
+    const cashGradient = ctx2.createLinearGradient(0, 0, 0, 400);
+    cashGradient.addColorStop(0, 'rgba(245, 158, 11, 0.9)'); // Amber
+    cashGradient.addColorStop(1, 'rgba(217, 119, 6, 0.7)');
+    
+    const onlineGradient = ctx2.createLinearGradient(0, 0, 0, 400);
+    onlineGradient.addColorStop(0, 'rgba(59, 130, 246, 0.9)'); // Blue
+    onlineGradient.addColorStop(1, 'rgba(37, 99, 235, 0.7)');
+
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: ['Cash', 'Online'],
+            datasets: [{
+                data: {{ balance_data | tojson }},
+                backgroundColor: [cashGradient, onlineGradient],
+                borderWidth: 4,
+                borderColor: '#ffffff',
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { family: 'Inter', weight: '600' }, usePointStyle: true, padding: 20 } }
+            }
+        }
+    });
+</script>
+{% endblock %}

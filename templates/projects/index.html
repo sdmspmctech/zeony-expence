@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Projects</h1>
+        <p class="text-slate-500 mt-1">Monitor project finances and profitability.</p>
+    </div>
+    <button onclick="openModal('addProjectModal')" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-amber-500/30 transform transition-all hover:-translate-y-0.5 font-medium flex items-center">
+        <i class="fas fa-plus mr-2"></i> Add Project
+    </button>
+</div>
+
+<div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50/50 border-b border-slate-100 text-slate-500 text-xs uppercase tracking-wider font-semibold">
+                    <th class="p-5">Project Name</th>
+                    <th class="p-5">Client</th>
+                    <th class="p-5 text-right">Total Value</th>
+                    <th class="p-5 text-right">Revenue Rec'd</th>
+                    <th class="p-5 text-right">Expenses</th>
+                    <th class="p-5 text-right">Profit</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100/80">
+                {% for proj in projects %}
+                <tr class="hover:bg-slate-50/50 transition-colors group">
+                    <td class="p-5 font-bold text-slate-800 text-base">{{ proj.project_name }}</td>
+                    <td class="p-5 text-slate-600">
+                        <span class="inline-block bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md text-sm"><i class="fas fa-user text-slate-400 mr-1.5"></i>{{ proj.client_name }}</span>
+                    </td>
+                    <td class="p-5 text-slate-600 text-right whitespace-nowrap">₹{{ "{:,.2f}".format(proj.total_value) }}</td>
+                    <td class="p-5 text-emerald-600 text-right font-medium whitespace-nowrap">₹{{ "{:,.2f}".format(proj.revenue_received) }}</td>
+                    <td class="p-5 text-rose-500 text-right font-medium whitespace-nowrap">-₹{{ "{:,.2f}".format(proj.expenses) }}</td>
+                    <td class="p-5 font-black text-right whitespace-nowrap {{ 'text-emerald-600' if proj.profit >= 0 else 'text-rose-600' }}">
+                        ₹{{ "{:,.2f}".format(proj.profit) }}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="p-8 text-center text-slate-400">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="fas fa-project-diagram text-4xl mb-3 text-slate-300"></i>
+                            <p>No project records found.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="addProjectModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-8 relative border border-slate-100">
+        <button onclick="closeModal('addProjectModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Add New Project</h2>
+        
+        <form method="POST" action="{{ url_for('projects.add') }}" class="space-y-5">
+            
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Project Name</label>
+                <input type="text" name="project_name" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all">
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Client</label>
+                    <select name="client_name" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all">
+                        <option value="">Select Client</option>
+                        {% for client in clients %}
+                        <option value="{{ client.client_name }}">{{ client.client_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Total Value (₹)</label>
+                    <input type="number" step="0.01" name="total_value" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all" value="0">
+                </div>
+            </div>
+            
+            <div class="pt-4 flex justify-end space-x-3">
+                <button type="button" onclick="closeModal('addProjectModal')" class="px-5 py-2.5 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl font-medium transition-colors">Cancel</button>
+                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-medium rounded-xl shadow-lg shadow-amber-500/30 transform transition-all hover:-translate-y-0.5">Save Project</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
