@@ -37,13 +37,13 @@
     <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
     <div class="absolute top-40 -right-40 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow" style="animation-delay: 1s;"></div>
     
-    <div class="w-full max-w-md relative z-10 animate-fade-in-up">
+    <div class="w-full max-w-md px-4 sm:px-0 relative z-10 animate-fade-in-up">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">Zeony<span class="text-indigo-600">Finance</span></h1>
             <p class="text-slate-500">Sign in to manage your expenditures</p>
         </div>
         
-        <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8">
+        <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-6 sm:p-8">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}

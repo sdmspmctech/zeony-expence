@@ -56,12 +56,18 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
     
+    <!-- Mobile Overlay -->
+    <div id="mobileOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
     {% if current_user.is_authenticated %}
     <!-- Modern Sidebar -->
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 shadow-2xl z-20 relative">
+    <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-2xl z-50 fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div class="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-transparent pointer-events-none"></div>
-        <div class="h-16 flex items-center px-6 border-b border-slate-800/50 font-bold text-2xl tracking-tight relative z-10">
-            <span class="text-white">Zeony</span><span class="text-indigo-400 ml-1">Finance</span>
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800/50 font-bold text-2xl tracking-tight relative z-10">
+            <div><span class="text-white">Zeony</span><span class="text-indigo-400 ml-1">Finance</span></div>
+            <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         
         <nav class="flex-1 overflow-y-auto py-6 relative z-10">
@@ -97,29 +103,36 @@
     </aside>
     {% endif %}
 
-    <div class="flex-1 flex flex-col overflow-hidden relative">
+    <div class="flex-1 flex flex-col overflow-hidden relative w-full">
         <!-- Glassmorphism Header -->
-        <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-8 z-10 sticky top-0">
-            <h2 class="text-xl font-semibold text-slate-800 tracking-tight capitalize">
-                {{ request.endpoint.split('.')[0] if request.endpoint else 'Welcome' }}
-            </h2>
+        <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-4 md:px-8 z-10 sticky top-0">
+            <div class="flex items-center">
+                {% if current_user.is_authenticated %}
+                <button onclick="toggleSidebar()" class="md:hidden mr-4 text-slate-600 hover:text-slate-900 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                {% endif %}
+                <h2 class="text-xl font-semibold text-slate-800 tracking-tight capitalize truncate">
+                    {{ request.endpoint.split('.')[0] if request.endpoint else 'Welcome' }}
+                </h2>
+            </div>
             <div class="flex items-center space-x-4">
                 {% if current_user.is_authenticated %}
                 <div class="flex items-center space-x-3 bg-slate-100/80 px-3 py-1.5 rounded-full border border-slate-200">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                         {{ current_user.username[0] | upper }}
                     </div>
-                    <span class="text-sm font-medium text-slate-700 pr-1">{{ current_user.username }}</span>
+                    <span class="text-sm font-medium text-slate-700 pr-1 hidden sm:block">{{ current_user.username }}</span>
                 </div>
                 {% endif %}
             </div>
         </header>
 
-        <main class="flex-1 overflow-x-hidden overflow-y-auto p-8 relative">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-8 relative w-full">
             <!-- Decorative background blob -->
             <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-indigo-50/50 to-transparent pointer-events-none -z-10"></div>
             
-            <div class="animate-fade-in-up max-w-7xl mx-auto pb-12">
+            <div class="animate-fade-in-up max-w-7xl mx-auto pb-12 w-full">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -142,22 +155,35 @@
     </div>
 
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            if (sidebar) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+        }
+        
         function openModal(id) {
             const modal = document.getElementById(id);
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            const panel = modal.querySelector('> div');
-            if (panel) {
-                panel.classList.add('animate-fade-in-up');
+            if(modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                const panel = modal.querySelector('> div');
+                if (panel) {
+                    panel.classList.add('animate-fade-in-up');
+                }
             }
         }
         function closeModal(id) {
             const modal = document.getElementById(id);
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            const panel = modal.querySelector('> div');
-            if (panel) {
-                panel.classList.remove('animate-fade-in-up');
+            if(modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                const panel = modal.querySelector('> div');
+                if (panel) {
+                    panel.classList.remove('animate-fade-in-up');
+                }
             }
         }
     </script>
